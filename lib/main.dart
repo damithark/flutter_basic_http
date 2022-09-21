@@ -21,13 +21,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var userList = [];
   bool isButtonVisible = true;
+  var pageNumber = 2;
 
   Future getData() async {
-    final url = Uri.parse('https://reqres.in/api/users?page=2');
+    final url = Uri.parse('https://reqres.in/api/users?page=$pageNumber');
     final response = await get(url);
     final userData = jsonDecode(response.body);
     setState(() {
-      userList = userData['data'];
+      // userList = userData['data'];
+      userList.addAll(userData['data']);
     });
   }
 
@@ -46,6 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue.shade800,
+        actions: [
+          TextButton(
+              onPressed: () {
+                // pageNumber++;
+                getData();
+              },
+              child: const Text("Load more"))
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -98,30 +108,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildInitialView(BuildContext context) {
     return Center(
-      child: TextButton(
-        onPressed: () {
-          isButtonVisible = false;
-          Future.delayed(
-              const Duration(
-                seconds: 2,
-              ), () {
-            getData();
-          });
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blue.shade400,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(12.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(width: double.infinity, height: 30),
+          const TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter a search term',
             ),
           ),
-          padding: const EdgeInsets.all(5),
-          child: const Text(
-            'Get User List',
-            style: TextStyle(
-                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w700),
+          TextButton(
+            onPressed: () {
+              isButtonVisible = false;
+              getData();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.blue.shade400,
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12.0),
+                ),
+              ),
+              padding: const EdgeInsets.all(5),
+              child: const Text(
+                'Search',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
