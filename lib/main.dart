@@ -47,14 +47,28 @@ class _HomeScreenState extends State<HomeScreen> {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
+        leading: TextButton(
+                  onPressed: () {
+                    if (!isButtonVisible) {
+                      setState(() {
+                      pageNumber = 2;
+                      isButtonVisible = true;
+                    });
+                    }
+                  },
+                  child: const Text("Back"),
+                 ),
         backgroundColor: Colors.blue.shade800,
         actions: [
           TextButton(
-              onPressed: () {
-                // pageNumber++;
+            onPressed: () {
+              // pageNumber++;
+              if (!isButtonVisible) {
                 getData();
-              },
-              child: const Text("Load more"))
+              }
+            },
+            child: const Text("Load more"),
+          ),
         ],
       ),
       body: Container(
